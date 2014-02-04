@@ -1,0 +1,26 @@
+
+/* Products */
+/*
+select#inputCategory {
+	width:50%;
+}*/
+
+.imageList.nav {
+	max-height: 200px;
+	overflow:auto;
+}
+
+.imageThumb {
+	height: 273px;
+}
+
+.category-items button.btn {
+	margin-right: 10px;
+}
+
+.category-items ul { padding: 0px;}
+
+.category-items ul > li {
+	display: inline-block;
+	list-style-type : none;
+}

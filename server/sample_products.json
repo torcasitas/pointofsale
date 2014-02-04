@@ -1,0 +1,89 @@
+{
+	"products" : [
+	 {
+	    "_id": "1",
+	    "name": "Cotton t-shirt tsk tsk tsk",
+	    "brand": "American Apparel",
+	    "categories": [
+	      {
+	        "name": "apparel"
+	      },
+	      {
+	        "name": "sporting goods"
+	      }
+	    ],
+	    "images": [
+	      {
+	        "kind": "thumbnail",
+	        "url": "img/products/1/thumbnail.jpg"
+	      },
+	      {
+	        "kind": "catalog",
+	        "url": "img/products/1/catalog.jpg"
+	      }
+	    ]
+	  },
+	  {
+	    "_id": "2",
+	    "name": "Tennis racquet",
+	    "brand": "Head",
+	    "categories": [
+	      {
+	        "name": "tennis gear"
+	      },
+	      {
+	        "name": "sporting goods"
+	      }
+	    ],
+	    "images": [
+	      {
+	        "kind": "thumbnail",
+	        "url": "img/products/2/thumbnail.jpg"
+	      },
+	      {
+	        "kind": "catalog",
+	        "url": "img/products/2/catalog.jpg"
+	      }
+	    ]
+	  },
+	  {
+	    "_id": "3",
+	    "name": "Beets",
+	    "brand": "N/A",
+	    "categories": [
+	      {
+	        "name": "produce"
+	      },
+	      {
+	        "name": "food"
+	      }
+	    ],
+	    "images": [
+	      {
+	        "kind": "thumbnail",
+	        "url": "img/products/3/thumbnail.jpg"
+	      },
+	      {
+	        "kind": "catalog",
+	        "url": "img/products/3/catalog.jpg"
+	      }
+	    ],
+	    "variants": [
+	      {
+	        "color": "Red",
+	        "images": [],
+	        "sizes": [
+	          {
+	            "size": "per lb.",
+	            "sku": "cat-3-red-perlb"
+	          },
+	          {
+	            "size": "unit",
+	            "sku": "cat-3-red-unit"
+	          }
+	        ]
+	      }
+	    ]
+	  }
+	]
+}

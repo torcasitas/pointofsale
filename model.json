@@ -1,0 +1,70 @@
+
+{
+	"id": "20131203_0001",
+	"datetime" : "2013/12/03 18:50",
+	"type" : enum[online, retail, mall, business],
+	"subtotal" : 100.00 
+	"tax": 20.00,
+	"total" : 120.00,
+	"store" : {
+		"id" : "STORE_0001",
+		"name" : "Chavez Market ",
+		"address" : "Whipple Ave. 211 Redwood City, CA 94062"
+	},
+	"detail" : [
+		{
+			"id": "4353453445",
+			"name" : "Avocado",
+			"qty" : 3,
+			"unitprice" : 1.25,
+			"subtotal" : 3.75,
+			"variants" : [
+				"color" : "Black",
+				"size" : "Medium",
+				"images" : [
+					{
+						"kind" : "thumbnail",
+						"url" : "images/items/4353453445/thumbnail.png"
+					},
+					{
+						"kind" : "bigger",
+						"url" : "images/items/4353453445/bigger.png"
+					}
+				] 
+			],
+			"description" : "Peru avocados",
+			"catalogs" : [ 
+				{ "name" : "grocery" },
+				{ "name" : "mexican market" }
+			]
+		},
+		{
+			"id": "4353453445",
+			"name" : "Avocado",
+			"qty" : 3,
+			"unitprice" : 1.25,
+			"subtotal" : 3.75,
+			"variants" : [
+				"color" : "Black",
+				"size" : "Medium",
+				"images" : [
+					{
+						"kind" : "thumbnail",
+						"url" : "images/items/4353453445/thumbnail.png"
+					},
+					{
+						"kind" : "bigger",
+						"url" : "images/items/4353453445/bigger.png"
+					}
+				] 
+			],
+			"description" : "Peru avocados",
+			"catalogs" : [ 
+				{ "name" : "grocery" },
+				{ "name" : "mexican market" }
+			]
+		}
+	],
+
+
+}

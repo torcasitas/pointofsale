@@ -1,0 +1,13 @@
+{
+	"name" : "vicon-backbone-requirejs",
+	"version" : "0.0.0",
+	"dependencies" : {
+		"backbone" : "latest",
+		"underscore" : "latest",
+		"jquery" : "2.0.0",
+		"bootstrap" : "latest",
+		"backbone.localStorage" : "latest",
+		"requirejs" : "latest",
+		"requirejs-text" : "latest"
+	}
+}
