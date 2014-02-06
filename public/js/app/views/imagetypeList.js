@@ -9,9 +9,8 @@ define([
 	var imagetypeListView = Backbone.View.extend({
 
 		initialize: function() {
-			this.collection.on("reset",  this.render, this);
-			this.collection.on(  "add",  this.render, this);
-			this.collection.on("remove", this.render, this);
+			this.collection.on("add",  this.render, this);
+			this.collection.on("remove", this.removeItem, this);
 		},
 
 		render: function() {
@@ -20,6 +19,10 @@ define([
 			_.each(this.collection.models, function(imageType) {
 				this.$el.append(new ImageTypeItemView({model: imageType}).render().el );
 			}, this);
+		},
+
+		removeItem: function(model) {
+			model.destroy();
 		}
 	});
 

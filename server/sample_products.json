@@ -1,71 +1,48 @@
 {
 	"products" : [
 	 {
-	    "_id": "1",
-	    "name": "Cotton t-shirt tsk tsk tsk",
-	    "brand": "American Apparel",
+	    
+	    "name": "Fly Creek UL1",
+	    "brand": "Big Agnes",
 	    "categories": [
 	      {
-	        "name": "apparel"
+	        "name": "camping gear"
 	      },
 	      {
-	        "name": "sporting goods"
+	        "name": "tents"
 	      }
 	    ],
 	    "images": [
 	      {
 	        "kind": "thumbnail",
-	        "url": "img/products/1/thumbnail.jpg"
+	        "url": "img/products/4/thumbnail.jpg"
 	      },
 	      {
 	        "kind": "catalog",
-	        "url": "img/products/1/catalog.jpg"
+	        "url": "img/products/4/catalog.jpg"
 	      }
 	    ]
 	  },
 	  {
-	    "_id": "2",
-	    "name": "Tennis racquet",
-	    "brand": "Head",
+	    
+	    "name": "Therm-a-Rest NeoAir XLite Sleeping Pad ",
+	    "brand": "Therm-a-Rest",
 	    "categories": [
 	      {
-	        "name": "tennis gear"
+	        "name": "camping gear"
 	      },
 	      {
-	        "name": "sporting goods"
+	        "name": "sleeping pads"
 	      }
 	    ],
 	    "images": [
 	      {
 	        "kind": "thumbnail",
-	        "url": "img/products/2/thumbnail.jpg"
+	        "url": "img/products/5/thumbnail.jpg"
 	      },
 	      {
 	        "kind": "catalog",
-	        "url": "img/products/2/catalog.jpg"
-	      }
-	    ]
-	  },
-	  {
-	    "_id": "3",
-	    "name": "Beets",
-	    "brand": "N/A",
-	    "categories": [
-	      {
-	        "name": "produce"
-	      },
-	      {
-	        "name": "food"
-	      }
-	    ],
-	    "images": [
-	      {
-	        "kind": "thumbnail",
-	        "url": "img/products/3/thumbnail.jpg"
-	      },
-	      {
-	        "kind": "catalog",
-	        "url": "img/products/3/catalog.jpg"
+	        "url": "img/products/5/catalog.jpg"
 	      }
 	    ],
 	    "variants": [
@@ -82,6 +59,29 @@
 	            "sku": "cat-3-red-unit"
 	          }
 	        ]
+	      }
+	    ]
+	  },
+	  {
+	    
+	    "name": "Squeeze Water Filtration System",
+	    "brand": "Sawyer",
+	    "categories": [
+	      {
+	        "name": "camping gear"
+	      },
+	      {
+	        "name": "water filters"
+	      }
+	    ],
+	    "images": [
+	      {
+	        "kind": "thumbnail",
+	        "url": "img/products/6/thumbnail.jpg"
+	      },
+	      {
+	        "kind": "catalog",
+	        "url": "img/products/6/catalog.jpg"
 	      }
 	    ]
 	  }

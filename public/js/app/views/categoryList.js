@@ -9,17 +9,21 @@ define([
 	var categoryListView = Backbone.View.extend({
 
 		initialize: function() {
-			this.collection.on("reset", this.render, this);
-			this.collection.on("add", this.render, this);
-			this.collection.on("remove", this.render, this);
+			//this.collection.on("reset", this.render, this);
+			this.collection.on("add", this.addOne, this);	
+			this.collection.on("remove", this.removeModel, this);		
+						
 		},
 
-		render: function() {
-			this.$el.empty();
+		addOne: function(categoryModel) {
+			//this.$el.empty();
+			//_.each(this.collection.models, function(category) {
+			this.$el.append(new CategoryItemView({ model: categoryModel }).render().el );
+			//}, this);
+		},
 
-			_.each(this.collection.models, function(category) {
-				this.$el.append(new CategoryItemView({ model: category }).render().el );
-			}, this);
+		removeModel: function(categoryModel) {			
+			categoryModel.destroy();
 		}
 	});
 

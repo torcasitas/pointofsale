@@ -18,9 +18,17 @@ select#inputCategory {
 	margin-right: 10px;
 }
 
-.category-items ul { padding: 0px;}
+.category-items ul,
+.imagetype-list ul { padding: 0px;}
 
+.category-items ul > li,
+.imagetype-list ul > li {
+	list-style-type : none;
+}
 .category-items ul > li {
 	display: inline-block;
-	list-style-type : none;
+}
+
+.imagetype-list ul > li > .remove {
+	cursor:pointer;
 }

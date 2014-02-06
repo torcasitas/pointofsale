@@ -8,7 +8,13 @@ define([
 
 		defaults: {
 			type: '',
-			imageFile: ''
+			url: ''
+		},
+
+		sync: function(method, model, options) {
+			if (method == 'read') {
+				return Backbone.sync.apply(this, arguments);
+			}
 		}
 
 	}),

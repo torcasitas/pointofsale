@@ -22,7 +22,8 @@ app.configure(function(){
 	
 	app.use(function(req, res, next) {
 	  res.header("Access-Control-Allow-Origin", "*");
-	  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+	  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
+	  res.header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS");
 	  next();
 	});
 
@@ -32,6 +33,11 @@ app.configure(function(){
 });
 
 var Schema = mongoose.Schema;
+
+// Category Schema
+var CategorySchema = new Schema({
+	name: { type: String, required: true}
+});
 
 // Image Schema
 var ImageSchema = new Schema({
@@ -58,9 +64,12 @@ var VariantSchema = new Schema({
 
 // Main Product schema
 var ProductSchema = new Schema({
-	_id: { type: String, unique: true},
+	// _id: { type: String, unique: true},
 	name : { type: String, required: true },
 	brand : { type: String, required: true},
+	categories : [
+		CategorySchema
+	],
 	images : [
 		ImageSchema
 	],
@@ -97,9 +106,9 @@ app.post('/api/products', function(req, res) {
 	console.log(req.body);
 
 	product = new ProductModel({
-		_id : req.body._id,
 		name : req.body.name,
 		brand : req.body.brand,
+		categories : req.body.categories,
 		images : req.body.images,
 		variants : req.body.variants
 	});
@@ -107,8 +116,10 @@ app.post('/api/products', function(req, res) {
 	product.save(function(err){
 		if(!err){
 			console.log("created");
+			return res.send(200, 'Product Saved.');
 		} else {
-			return console.log(err);
+			console.log("Error saving the product : " + err);
+			return res.send(500);
 		}
 	});
 	return res.send(product);
@@ -169,6 +180,7 @@ app.put('/api/products/:_id', function(req, res) {
 		product.title = req.body.title;
 		product.description = req.body.description;
 		product.id = req.body.id;
+		product.categories = req.body.categories;
 		product.images = req.body.images;
 
 		return product.save(function(err) {

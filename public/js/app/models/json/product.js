@@ -8,6 +8,8 @@ define([
 
 		//urlRoot: "http://localhost:4242/api/products",
 
+		//idAttribute: "_id",
+
 		defaults: {
 			name: "",
 			brand: "",
@@ -29,6 +31,10 @@ define([
 		saved: function(){
 			console.log('New item created...');
 		}
+
+		// nextId: function() {
+		// 	return this.last().get('_id')
+		// }
 	});
 
 	return {

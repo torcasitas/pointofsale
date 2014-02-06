@@ -17,7 +17,7 @@ define([
 
 		initialize: function() {
 			this.model.on("change", this.render, this);
-			this.model.on("destroy", this.render, this);
+			this.model.on("destroy", this.remove, this);
 		},
 
 		render: function() {
@@ -26,11 +26,9 @@ define([
 			return this;
 		},
 
-		removeItem: function(ev) {
-			ev.preventDefault();
+		removeItem: function() {
 			this.model.destroy();
 		}
-
 	});
 
 	return imagetypeItemView;
