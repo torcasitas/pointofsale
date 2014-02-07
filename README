@@ -1,5 +1,4 @@
 # This is a Point of Sale application using a rest API using Node.js/Express and MongoDB as storage.
-# The front end uses a Backbone.js implementation sitting on top of Require.js to load the necessary files
-# for each module. 
+# The front end uses a Backbone.js implementation sitting on top of Require.js to load the necessary files for each module. 
 
 
