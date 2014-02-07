@@ -34,13 +34,13 @@ define([
 
 				var productList = new models.ProductCollection();
 
-					productList.fetch({reset: true, data: {name: ''}, success: function(productModel) {
-							// Note that we could also 'recycle' the same instance of EmployeeFullView
-                        	// instead of creating new instances
-							var productView = new ProductView({model: productModel, el: $pageContent });
-							productView.render();
-						}
-					});
+				productList.fetch({reset: true, data: {name: ''}, success: function(productModels) {
+						// Note that we could also 'recycle' the same instance of EmployeeFullView
+                    	// instead of creating new instances
+						var productView = new ProductView({collection: productModels, el: $pageContent });
+						productView.render();
+					}
+				});
 			});
 		}, 
 

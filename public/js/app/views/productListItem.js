@@ -21,7 +21,7 @@ define([
 				formatData = {};
 
 			// Parse data
-			formatData["id"] = output.id;
+			formatData["id"] = output._id;
 			formatData["name"] = output.name;
 			formatData["brand"] = output.brand;
 			formatData["categories"] = _.map(output.categories, function(item){
@@ -40,7 +40,7 @@ define([
 				return (image.kind === "thumbnail");
 			});
 
-			formatData["thumbnail"] = thumbnail[0].url;
+			formatData["thumbnail"] = (thumbnail.length > 0 ) ? thumbnail[0].url : "";
 
 			this.$el.html(template(formatData));
 			return this;
