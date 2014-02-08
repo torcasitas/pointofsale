@@ -13,13 +13,13 @@
  		<div class="form-group">
  			<label for="inputName" class="col-sm-2 control-label">Name</label>
  			<div class="col-sm-9">
- 				<input type="text" class="form-control" id="inputName" placeholder="Name">
+ 				<input type="text" class="form-control" id="inputName" placeholder="Name" value='<%= name %>' >
  			</div>
  		</div>
  		<div class="form-group">
  			<label for="inputBrand" class="col-sm-2 control-label">Brand</label>
  			<div class="col-sm-9">
- 				<input type="text" class="form-control" id="inputBrand" placeholder="Brand">
+ 				<input type="text" class="form-control" id="inputBrand" placeholder="Brand" value='<%= brand %>'>
  			</div>
  		</div>
  		<div class="form-inline">
@@ -38,7 +38,9 @@
  		<div class="form-group center-block">
  			<div class="col-sm-2"></div>
  			<div class="category-items col-sm-9 well well-sm">
- 				<ul></ul> 				
+ 				<ul>
+
+ 				</ul> 				
  			</div>
  			<input type="text" name="hiddenCategories" id="hiddenCategories" class="hidden" value="">
  		</div>
@@ -65,7 +67,7 @@
 	 				<div class="panel-body">
 	 					<div class="imagetype-list">
 		 					<ul></ul>
-		 					<input type="hidden" name="imageList" value="[{},{}]">
+		 					
 		 				</div>
 	 				</div>
 	 			</div>
@@ -82,12 +84,14 @@
  		<div class="form-group">
  			<div class="col-sm-1"></div>
  			<div class="col-sm-8">
- 				<button type="submit" class="btn btn-primary">Save changes</button>
+ 				<button type="submit" class="btn btn-primary"><%= (action == 'Edit') ? 'Update' : 'Save' %> changes</button>
  			</div>
  		</div>
  	</form>
 
 
   </div>
-  <div class="panel-footer">Panel footer</div>
+  <div class="panel-footer">
+	Go back to <a href="javascript:;" class="back">Product Listing</a>
+  </div>
 </div>

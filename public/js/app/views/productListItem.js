@@ -10,9 +10,15 @@ define([
 
 	var productListItemView = Backbone.View.extend({
 
-		tagName: "tr",
+		tagName: 'tr',
+		className : 'rowItem',
+		events: {
+			'click' : 'editProduct'
+		},
 
-		initialize: function() {
+		initialize: function(options) {
+			this.eventAgg = options.eventAgg;
+
 			this.model.on("change", this.render, this);
 		},
 
@@ -21,7 +27,7 @@ define([
 				formatData = {};
 
 			// Parse data
-			formatData["id"] = output._id;
+			//formatData["id"] = output._id;
 			formatData["name"] = output.name;
 			formatData["brand"] = output.brand;
 			formatData["categories"] = _.map(output.categories, function(item){
@@ -44,6 +50,11 @@ define([
 
 			this.$el.html(template(formatData));
 			return this;
+		},
+
+		editProduct: function() {
+			this.model.attributes['action'] = 'Edit';
+			this.eventAgg.trigger('editProduct', this.model);
 		}
 
 	});

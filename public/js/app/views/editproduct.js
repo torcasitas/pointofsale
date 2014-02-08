@@ -11,6 +11,7 @@ define([
 ], function ($, _, Backbone,  ProductModel , CategoryModel, ImageTypeModel, CategoryListView, ImageTypeListView , editProductTpl) {
 	'use strict';
 
+
 	var template = _.template(editProductTpl);
 
 	var categoryCollection = new CategoryModel.CategoryCollection();
@@ -23,15 +24,19 @@ define([
 			"click button.addCategory" 				: "addCategory",
 			"click button.addImage"	 				: "addImage",
 			"click .category-items button" 			: "removeCategory",
-			"submit form"							: "saveProduct"
+			"submit form"							: "saveProduct",
+			"click a.back"							: "showProductListing",
 		},
 
-		initialize: function() {
-			//this.collection = new ProductModel.ProductCollection();
+		initialize: function(options) {
+			_.bindAll(this, 'editProduct');
+			options.eventAgg.bind('editProduct', this.editProduct);
+
+			this.eventAgg = options.eventAgg;
+
 			this.$form = null;
 			this.$inputCategory = null;
-			this.categories = [];
-
+			
 			this.listenTo(productCollection, 'add', 	this.addProduct);
 			// this.listenTo(categoryCollection, 'remove', this.removeCategory);
 
@@ -42,7 +47,10 @@ define([
 
 		render: function() {
 			var data = this.model.attributes;
+
+			// Render the template with first level data.
 			this.$el.html(template(data));
+
 			this.$form = $("form", this.$el);
 			this.$inputProductName = $("#inputName", this.$el);
 			this.$inputBrand = $("#inputBrand", this.$el);
@@ -52,8 +60,9 @@ define([
 			this.$categoriesEl = $(".category-items > ul", this.$el);
 			this.$imageTypesEl = $(".imagetype-list > ul", this.$el);
 
+			// Create the Category and Image Views with empty collection
 			this.categoryListView = new CategoryListView({ 
-					collection: new CategoryModel.CategoryCollection(),
+					collection: categoryCollection,
 					el: this.$categoriesEl
 			});
 
@@ -61,10 +70,22 @@ define([
 					collection: imagetypeCollection,
 					el: this.$imageTypesEl
 			});
-		
-			this.categories = [];
 
+			// Populate the collections if the current model contains any data. 
+			_.each(data.categories, function(category) {
+				this.categoryListView.collection.create(category);
+			}, this);
+
+			_.each(data.images, function(image) {
+				this.imagetypeListView.collection.create(image);
+			}, this);
+			
 			return this;
+		},
+
+		editProduct: function(product) {
+			this.model = product;
+			this.render();
 		},
 
 		addProduct: function(ev) {
@@ -81,8 +102,6 @@ define([
 					catCollection.create(item);
 				}
 		},
-
-
 
 		addImage: function(ev) {
 			ev.preventDefault();
@@ -131,6 +150,11 @@ define([
 
 			productCollection.create(this.newAttributes(), { wait: true } );
 
+		},
+
+		showProductListing: function(ev) {
+			ev.preventDefault();
+			this.eventAgg.trigger('showProductListing', this);
 		}
 
 	});

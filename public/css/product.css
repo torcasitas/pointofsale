@@ -5,6 +5,12 @@ select#inputCategory {
 	width:50%;
 }*/
 
+/* Product listing */
+
+.productList tbody > tr {
+	cursor:pointer;
+}
+
 .imageList.nav {
 	max-height: 200px;
 	overflow:auto;

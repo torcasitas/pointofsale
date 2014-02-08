@@ -11,7 +11,13 @@ define([
 
 	var productView = Backbone.View.extend({
 
-		initialize: function() {
+		initialize: function(options) {
+			_.bindAll(this, 'showProductListing');
+			options.eventAgg.bind('showProductListing', this.showProductListing);
+
+			this.eventAgg = options.eventAgg;
+
+
 
 
 			// var productList = new models.ProductCollection();
@@ -34,11 +40,15 @@ define([
 		render: function() {
 			this.$el.html(template);
 
-			var listView = new ProductListView({ collection: this.collection, el: $('.productList table > tbody', this.el)});
+			var listView = new ProductListView({ collection: this.collection, eventAgg: this.eventAgg, el: $('.productList table > tbody', this.el)});
 			listView.render();
 
 			return this;
-		}
+		},
+
+		showProductListing: function() {
+			this.render();
+		} 
 	});
 
 	return productView;
