@@ -14,8 +14,6 @@ define([
 
 	var template = _.template(editProductTpl);
 
-	var categoryCollection = new CategoryModel.CategoryCollection();
-	var imagetypeCollection = new ImageTypeModel.ImageTypeCollection();
 	var productCollection = new ProductModel.ProductCollection();
 
 	var editProductView = Backbone.View.extend({
@@ -34,9 +32,10 @@ define([
 
 			this.eventAgg = options.eventAgg;
 
-			this.$form = null;
-			this.$inputCategory = null;
-			
+
+			this.categoryCollection = null;
+			this.imagetypeCollection = null;
+
 			this.listenTo(productCollection, 'add', 	this.addProduct);
 			// this.listenTo(categoryCollection, 'remove', this.removeCategory);
 
@@ -62,12 +61,12 @@ define([
 
 			// Create the Category and Image Views with empty collection
 			this.categoryListView = new CategoryListView({ 
-					collection: categoryCollection,
+					collection: new CategoryModel.CategoryCollection(),
 					el: this.$categoriesEl
 			});
-
+		
 			this.imagetypeListView = new ImageTypeListView({ 
-					collection: imagetypeCollection,
+					collection: new ImageTypeModel.ImageTypeCollection(),
 					el: this.$imageTypesEl
 			});
 
