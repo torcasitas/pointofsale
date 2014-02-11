@@ -25,12 +25,10 @@ define([
 		// }
 
 		sync: function(method, model, options) {
-			if(method === 'create' || method === 'update') {
+			if (method === 'update') {
 				var uri = "http://localhost:4242/api/products/",
 				 urlEnd = this.id ? uri + this.id : uri,
 				 self 	= this;
-
-
 
 				return $.ajax({
 					dataType: 'json',
@@ -40,14 +38,16 @@ define([
 					success: function(data) {
 						console.log('updated product successfully.');
 						self.trigger('change');
-
 					},
 					error: function(err) {
 						console.log('error updating');
 						console.dir(err);
 					}
-
 				});
+			
+			} else {
+
+				return Backbone.sync.apply(this, arguments);
 			}
 		}
 

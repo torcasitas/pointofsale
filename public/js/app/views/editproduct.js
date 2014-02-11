@@ -109,7 +109,8 @@ define([
 		},
 
 		addProduct: function(ev) {
-			console.log('New product added');
+			console.log('New product added...');
+			this.eventAgg.trigger('showProductListing', {update: true});
 			this.clearInputFields();
 		},
 
