@@ -34,7 +34,7 @@ define([
 
 				var eventAgg = _.extend({}, Backbone.Events),
 					productList = new models.ProductCollection(),
-					addEditProductView = new EditProductView({ eventAgg: eventAgg, el: $pageContent });
+					addEditProductView = new EditProductView({model: new models.ProductModel(), eventAgg: eventAgg, el: $pageContent });
 
 				productList.fetch({reset: true, data: {name: ''}, success: function(productModels) {
 						// Note that we could also 'recycle' the same instance of EmployeeFullView

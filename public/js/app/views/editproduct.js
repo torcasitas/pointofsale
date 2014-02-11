@@ -8,13 +8,13 @@ define([
 	'app/views/categoryList',
 	'app/views/imagetypeList',
 	'text!tpl/editproduct.html'
-], function ($, _, Backbone,  ProductModel , CategoryModel, ImageTypeModel, CategoryListView, ImageTypeListView , editProductTpl) {
+], function ($, _, Backbone,  models , CategoryModel, ImageTypeModel, CategoryListView, ImageTypeListView , editProductTpl) {
 	'use strict';
 
 
 	var template = _.template(editProductTpl);
 
-	var productCollection = new ProductModel.ProductCollection();
+	var productCollection = new models.ProductCollection();
 
 	var editProductView = Backbone.View.extend({
 
@@ -37,6 +37,7 @@ define([
 			this.imagetypeCollection = null;
 
 			this.listenTo(productCollection, 'add', 	this.addProduct);
+		
 			// this.listenTo(categoryCollection, 'remove', this.removeCategory);
 
 			//this.listenTo(categoryCollection, 'add', 	this.addCategory);
@@ -46,6 +47,11 @@ define([
 
 		render: function() {
 			var data = this.model.attributes;
+
+			if(this.model) {
+				this.model.off('change');
+				this.model.on('change',	this.updateModel, this);
+			}
 
 			// Render the template with first level data.
 			this.$el.html(template(data));
@@ -83,8 +89,23 @@ define([
 		},
 
 		editProduct: function(product) {
+			if(!product) {
+				this.model = new models.ProductModel();
+				this.model.attributes["action"] = "New";
+				this.render();
+				return;
+			}	
+			
 			this.model = product;
+
 			this.render();
+		},
+
+		updateModel: function() {
+			console.log('Model updated...');
+			this.eventAgg.trigger('showProductListing', {update: true});
+			this.clearInputFields();
+
 		},
 
 		addProduct: function(ev) {
@@ -109,7 +130,8 @@ define([
 				item = {
 					"kind" : imageType,
 					"url" : imageName
-				}
+				},
+				imagetypeCollection = this.imagetypeListView.collection;
 
 				if( !_.findWhere( imagetypeCollection.toJSON(), item )) {
 					imagetypeCollection.create(item);
@@ -127,7 +149,7 @@ define([
 				"categories" : catCollection.toJSON(),
 				"images" : imgTypeCollection.toJSON(),
 				"variants" : []
-			}
+			};
 		},
 
 		clearInputFields: function() {
@@ -145,15 +167,23 @@ define([
 
 		saveProduct: function(ev) {
 			ev.preventDefault();
+			var action = this.model.attributes['action'];
+			
 			console.log("Submitting form...");
 
-			productCollection.create(this.newAttributes(), { wait: true } );
+			if (action == 'New') {
+				productCollection.create(this.newAttributes(), { wait: true } );
+			} else if (action == 'Edit') {
+				var updatedModel = this.newAttributes();
+					//this.model.set(this.newAttributes());	
+					this.model.save(updatedModel, {wait: true});
+			}
 
 		},
 
 		showProductListing: function(ev) {
 			ev.preventDefault();
-			this.eventAgg.trigger('showProductListing', this);
+			this.eventAgg.trigger('showProductListing', {update: false});
 		}
 
 	});

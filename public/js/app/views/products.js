@@ -3,13 +3,18 @@ define([
 	'underscore',
 	'backbone',
 	'app/views/productList',
+	'app/models/product',
 	'text!tpl/products.html'
-], function ($, _, Backbone, ProductListView, productTemplate){
+], function ($, _, Backbone, ProductListView, models, productTemplate){
 	'use strict';
 
 	var template = _.template(productTemplate);
 
 	var productView = Backbone.View.extend({
+
+		events: {
+			"click .new-product"		: "addNewProduct"
+		},
 
 		initialize: function(options) {
 			_.bindAll(this, 'showProductListing');
@@ -17,8 +22,9 @@ define([
 
 			this.eventAgg = options.eventAgg;
 
-
-
+			this.collection.on('reset', this.render, this);
+			
+			
 
 			// var productList = new models.ProductCollection();
 
@@ -46,9 +52,20 @@ define([
 			return this;
 		},
 
-		showProductListing: function() {
-			this.render();
-		} 
+		showProductListing: function(action) {
+			var update = action ? action.update : false;
+			
+			if (update) {
+				this.collection.fetch({reset: true});
+			} else {
+				this.render();
+			}
+		},
+
+		addNewProduct: function() {
+			this.eventAgg.trigger('editProduct');
+		}
+
 	});
 
 	return productView;

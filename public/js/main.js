@@ -55,7 +55,9 @@ require(['jquery', 'backbone','app/routes/router', 'bootstrap'], function($ ,Bac
 	var router = new Router();
 	Backbone.history.start();
 
-	Backbone.emulateHTTP = true;
+	// Backbone.emulateHTTP = true;
+	// Backbone.emulateJSON = true;
+	
 	Backbone.Model.prototype.idAttribute = "_id";
 
 	// // Initialize the application view

@@ -22,8 +22,8 @@ app.configure(function(){
 	
 	app.use(function(req, res, next) {
 	  res.header("Access-Control-Allow-Origin", "*");
-	  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
-	  res.header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS");
+	  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, X-File-Name, Content-Type, X-HTTP-Method-Override, Cache-Control");
+	  res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
 	  next();
 	});
 
@@ -177,17 +177,26 @@ app.get('/api/products/:_id', function(req, res) {
 // Update a single product by id
 app.put('/api/products/:_id', function(req, res) {
 	return ProductModel.findById(req.params._id, function (err, product) {
-		product.title = req.body.title;
-		product.description = req.body.description;
-		product.id = req.body.id;
+		product.name = req.body.name;
+		product.brand = req.body.brand;
+		product.categories = req.body.categories;
 		product.categories = req.body.categories;
 		product.images = req.body.images;
+		product.variants = req.body.variants;
 
+		// console.log("Product : ");
+		// console.dir(product);
+
+		// return null;
+		res.set('Content-Type', 'application/json');
+		
 		return product.save(function(err) {
+
 			if(!err) {
-				console.log("updated");
+				return res.send(200, { success: 'Product was updated successfully.'});
 			} else {
 				console.log(err);
+				return res.send(500, { error: 'Could not update the product.' });
 			}
 		});
 		
@@ -202,10 +211,10 @@ app.del('/api/products/:_id', function(req, res) {
 	return ProductModel.findById(req.params._id, function (err, product){
 		return product.remove(function (err){
 			if(!err) {
-				console.log('removed');
-				return res.send('');
+				return res.send(200, 'Product deleted.');
 			} else {
 				console.log(err);
+				return res.send(500, "Error removing product.");
 			}
 		});
 	});
