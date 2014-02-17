@@ -8,6 +8,7 @@
 		"bootstrap" : "latest",
 		"backbone.localStorage" : "latest",
 		"requirejs" : "latest",
-		"requirejs-text" : "latest"
+		"requirejs-text" : "latest",
+		"bootstrap-filestyle" : "latest"
 	}
 }

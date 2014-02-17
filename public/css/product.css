@@ -38,3 +38,34 @@ select#inputCategory {
 .imagetype-list ul > li > .remove {
 	cursor:pointer;
 }
+
+.imagetype-list select {
+	width: 45%;
+	display: inline-block;
+	
+}
+
+.imagetype-list .form-group {
+	line-height: 80px;
+}
+
+.imagetype-list .thumbnail-wrap > img {
+	border:1px solid #ccc;
+	width: 120px;
+	height: 80px;	
+}
+
+/*.imagetype-list .thumbnail-wrap > img {
+	display:none;
+}
+*/
+.imagetype-list li > .form-group:hover .glyphicon.remove {
+	visibility: visible;
+}
+
+.imagetype-list .glyphicon.remove {
+	margin: 10px 10px 10px 30px;
+	visibility: hidden;
+	cursor:pointer;
+
+}

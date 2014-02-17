@@ -8,21 +8,21 @@ define([
 
 	var imagetypeListView = Backbone.View.extend({
 
-		initialize: function() {
+		initialize: function(options) {
 			this.collection.on("add",  this.render, this);
 			this.collection.on("remove", this.removeItem, this);
 		},
 
-		render: function() {
-			this.$el.empty();
+		render: function(imageItem) {
+			this.$el.append(new ImageTypeItemView({model: imageItem}).render().el);
 
-			_.each(this.collection.models, function(imageType) {
-				this.$el.append(new ImageTypeItemView({model: imageType}).render().el );
-			}, this);
+			$(':file').filestyle({input: false, buttonText: "Select file", classButton: "btn btn-primary"});
+
 		},
 
 		removeItem: function(model) {
 			model.destroy();
+			// this.eventAgg.trigger('removeImageFile', model.attributes.file);
 		}
 	});
 

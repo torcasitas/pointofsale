@@ -13,6 +13,7 @@ require.config({
 		backbone : './backbone/backbone',
 		backboneLocalstorage : './backbone.localStorage/backbone.localStorage',
 		bootstrap : './bootstrap/dist/js/bootstrap.min',
+		bootstrap_filestyle : './bootstrap-filestyle/src/bootstrap-filestyle.min',
 		text : './requirejs-text/text',
 		app : '../app',
 		tpl : '../tpl'
@@ -33,6 +34,9 @@ require.config({
 		bootstrap: {
 			deps : ['jquery']
 		},
+		bootstrap_filestyle : {
+			deps : ['bootstrap']
+		},
 		backbone: {
 			deps: [
 				'underscore',
@@ -49,7 +53,7 @@ require.config({
 });
 
 
-require(['jquery', 'backbone','app/routes/router', 'bootstrap'], function($ ,Backbone, Router) {
+require(['jquery', 'backbone','app/routes/router', 'bootstrap', 'bootstrap_filestyle'], function($ ,Backbone, Router) {
 
 	//Initialize routing and start Backbone.history()
 	var router = new Router();
@@ -57,7 +61,7 @@ require(['jquery', 'backbone','app/routes/router', 'bootstrap'], function($ ,Bac
 
 	// Backbone.emulateHTTP = true;
 	// Backbone.emulateJSON = true;
-	
+
 	Backbone.Model.prototype.idAttribute = "_id";
 
 	// // Initialize the application view

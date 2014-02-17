@@ -42,7 +42,7 @@ var CategorySchema = new Schema({
 // Image Schema
 var ImageSchema = new Schema({
 	kind : { type: String, required: true },
-	url : { type: String }
+	name : { type: String }
 });
 
 var SizeSchema = new Schema({
@@ -189,7 +189,7 @@ app.put('/api/products/:_id', function(req, res) {
 
 		// return null;
 		res.set('Content-Type', 'application/json');
-		
+
 		return product.save(function(err) {
 
 			if(!err) {

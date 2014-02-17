@@ -7,8 +7,9 @@ define([
 	var ImageTypeItem = Backbone.Model.extend({
 
 		defaults: {
-			type: '',
-			url: ''
+			kind: '',
+			name: '',
+			type: 'Icon'
 		},
 
 		sync: function(method, model, options) {

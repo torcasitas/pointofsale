@@ -20,7 +20,9 @@ define([
 
 		events: {
 			"click button.addCategory" 				: "addCategory",
-			"click button.addImage"	 				: "addImage",
+			"click a.addimg-btn"	 				: "addImage",
+			"click a.delimg-btn"	 				: "removeImage",
+			// "change #inputFileImage"	 			: "addImages",
 			"click .category-items button" 			: "removeCategory",
 			"submit form"							: "saveProduct",
 			"click a.back"							: "showProductListing",
@@ -31,7 +33,6 @@ define([
 			options.eventAgg.bind('editProduct', this.editProduct);
 
 			this.eventAgg = options.eventAgg;
-
 
 			this.categoryCollection = null;
 			this.imagetypeCollection = null;
@@ -60,7 +61,6 @@ define([
 			this.$inputProductName = $("#inputName", this.$el);
 			this.$inputBrand = $("#inputBrand", this.$el);
 			this.$inputCategory = $("#inputCategory", this.$el);
-			this.$inputImageType = $("#inputImageType", this.$el);
 			this.$inputFileImage = $("#inputFileImage", this.$el);
 			this.$categoriesEl = $(".category-items > ul", this.$el);
 			this.$imageTypesEl = $(".imagetype-list > ul", this.$el);
@@ -126,23 +126,62 @@ define([
 
 		addImage: function(ev) {
 			ev.preventDefault();
-			var imageType = this.$inputImageType.val(),
-				imageName = this.$inputFileImage.val(),
-				item = {
-					"kind" : imageType,
-					"url" : imageName
+
+			// var files = ev.target.files,
+			// 	imagetypeCollection = this.imagetypeListView.collection;
+
+			// imagetypeCollection.reset();
+
+			// for(var i =0, f; f = files[i]; i++) {
+			// 	var imageItem = {
+			// 			"name" : f.name,
+			// 			"type" : f.type,
+			// 			"kind" : "",
+			// 			"file" : f						
+			// 		};
+				 	
+			//  	if( !_.findWhere( imagetypeCollection.toJSON(), imageItem )) {
+			// 		imagetypeCollection.create(imageItem);
+			// 	}
+			// }
+
+			var item = {
+					"kind" : '',
+					"name" : 'No image.',
+					"type" : ''
 				},
 				imagetypeCollection = this.imagetypeListView.collection;
 
-				if( !_.findWhere( imagetypeCollection.toJSON(), item )) {
-					imagetypeCollection.create(item);
-				}
+				// // Check the image doesn't exist in the collection
+				// if( !_.findWhere( imagetypeCollection.toJSON(), item )) {
+				imagetypeCollection.create(item);
+
+				//}
+
+		},
+
+		removeImage: function(ev){
+			ev.preventDefault();
+			var imagetypeView = this.imagetypeListView,
+				imagetypeCollection = imagetypeView.collection,
+				lastItem = imagetypeCollection.size() - 1;
+
+			if(lastItem > -1) {
+				var lastImageItem = imagetypeCollection.get(imagetypeCollection.models[lastItem]);
+					imagetypeCollection.remove(lastImageItem);
+			}
 
 		},
 
 		newAttributes: function() {
 			var catCollection = this.categoryListView.collection,
 				imgTypeCollection = this.imagetypeListView.collection;
+
+				_.each(imgTypeCollection.models, function(imgItem) {
+					imgItem.unset("type", {silent:true});
+					imgItem.unset("file", {silent:true});
+					imgItem.unset("kindImages", {silent:true});
+				}, this);  
 
 			return {
 				"name" : this.$inputProductName.val(),
