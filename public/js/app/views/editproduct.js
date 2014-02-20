@@ -24,7 +24,8 @@ define([
 			"click a.delimg-btn"	 				: "removeImage",
 			// "change #inputFileImage"	 			: "addImages",
 			"click .category-items button" 			: "removeCategory",
-			"submit form"							: "saveProduct",
+			//"submit form[name='productForm']"		: "saveProduct",
+			"click #saveChanges"					: "saveProduct",
 			"click a.back"							: "showProductListing",
 		},
 
@@ -33,6 +34,8 @@ define([
 			options.eventAgg.bind('editProduct', this.editProduct);
 
 			this.eventAgg = options.eventAgg;
+
+			this.uploadImagesEndpoint = 'http://localhost:4242/api/products/uploadImages';
 
 			this.categoryCollection = null;
 			this.imagetypeCollection = null;
@@ -64,7 +67,7 @@ define([
 			this.$inputFileImage = $("#inputFileImage", this.$el);
 			this.$categoriesEl = $(".category-items > ul", this.$el);
 			this.$imageTypesEl = $(".imagetype-list > ul", this.$el);
-
+			
 			// Create the Category and Image Views with empty collection
 			this.categoryListView = new CategoryListView({ 
 					collection: new CategoryModel.CategoryCollection(),
@@ -108,14 +111,65 @@ define([
 
 		},
 
-		addProduct: function(ev) {
-			console.log('New product added...');
-			this.eventAgg.trigger('showProductListing', {update: true});
-			this.clearInputFields();
+		addProduct: function(ev) {			
+
+			var newData = ev.toJSON();
+			// Product has been added to Store, time to upload pics 
+
+			this.uploadImages({
+				success: function() {
+					// this.eventAgg.trigger('showProductListing', {update: true});
+					// this.clearInputFields();
+					console.log('Number is GREATER than 50');
+				}, 
+				error: function() {
+					//console.log('Error uploading images to the server');
+					console.log('Number is not greater than 50');
+				}, 
+				rData : { 
+					id : newData.id,
+					images : newData.images					
+				}
+			});
+
+		},
+
+		uploadImages: function(options) {
+			var self 		= this,
+				id 			= options.rData.id,
+				images 		= options.rData.images,
+				$filesEl 	= $('form[name="imageListForm"] input[type="file"]'),
+				fileData 	= new FormData();
+
+			if(!$filesEl.length) return;
+
+			var appendFileData = function(file, index) {
+				var kind = images[index] && images[index].kind;
+				fileData.append('file_' + id + '_' + kind.toLowerCase(), file.files[0]);
+			};
+
+			_.each($filesEl, appendFileData);
+
+			$.ajax({
+				url: self.uploadImagesEndpoint,
+				type: 'POST',
+				data: fileData,
+				cache: false,
+				dataType: 'json',
+				processData: false,
+				contentType: false,
+				success: function(data, status, jqXHR) {
+					console.log('Success uploading files');
+				},
+				error: function(jqXHR, status, error) {
+					console.log('error uploading files');
+				}
+			});
+
 		},
 
 		addCategory: function(ev) {
-			var category = this.$inputCategory.val(),				
+			var category = this.$inputCategory.val(),	
 				item = { "name" : category },
 				catCollection = this.categoryListView.collection;
 
@@ -152,11 +206,11 @@ define([
 				},
 				imagetypeCollection = this.imagetypeListView.collection;
 
-				// // Check the image doesn't exist in the collection
-				// if( !_.findWhere( imagetypeCollection.toJSON(), item )) {
-				imagetypeCollection.create(item);
+			// // Check the image doesn't exist in the collection
+			// if( !_.findWhere( imagetypeCollection.toJSON(), item )) {
+			imagetypeCollection.create(item);
 
-				//}
+			//}
 
 		},
 

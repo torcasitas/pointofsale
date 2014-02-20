@@ -56,7 +56,8 @@ define([
 					removeBtn	= this.$el.find('.remove '),
 					fileReader 	= new FileReader();
 					
-				this.model.set({ "file" : files[0] }, {silent: true});
+				this.model.set({ "file" : file }, {silent: true});
+				this.model.set({ "name" : file.name }, {silent: true});
 
 				fileReader.onload = (function(theFile) {
 					return function(e) {

@@ -1,6 +1,9 @@
 var express = require('express'),
 	mongoose = require('mongoose'),
+	fs = require('fs'),
+	util = require('util'),
     // http = require('http'),
+    //Promise = require('promise'),
 	path = require('path'),
 	application_root = __dirname;
 
@@ -13,11 +16,13 @@ var app = express();
 mongoose.connect('mongodb://localhost/vicon');
 
 // Config
-
 app.configure(function(){
 	// app.use(express.bodyParser()); Soon to be deprecated in Connect 3.0
-	app.use(express.urlencoded());
-	app.use(express.json());
+	// app.use(express.json()).use(express.urlencoded());
+	app.use(express.bodyParser({
+		keepExtensions: true,
+		uploadDir: './uploads'
+	}));
 	app.use(express.methodOverride());
 	
 	app.use(function(req, res, next) {
@@ -159,6 +164,80 @@ app.post('/api/products/bulk', function(req, res) {
 		// }
 
 		return res.send(req.body.products);
+
+});
+
+// Upload images
+app.post('/api/products/uploadImages', function(req, res) {
+
+	if (!req.files) return;
+	
+	var files = req.files,
+		keys = Object.keys(files),
+		getExtension = function(type) {
+
+			switch(type) {
+				case 'image/jpeg': return '.jpg';
+				case 'image/png': return '.png';
+				case 'image/gif': return '.gif';
+				default: return '';
+			}
+
+		};
+	
+		var cache = {};
+
+	var readAsync = function(file, newPath, cb) {
+		
+		console.log('file read : ');
+		console.log(file);
+
+		fs.readFile(file, function(err, data) {
+			
+			if (err) {
+				console.log('error reading the file');
+				return res.send(500, "Error reading image file.");
+			} else {
+				console.log('done reading file ' + file);
+				cb(file, newPath);
+					
+			}
+		});
+	};
+
+	var renameAsync = function(oldPath, newPath) {
+
+		fs.rename(oldPath, newPath, function(err){
+			if (err) {
+				console.log('error writing file');
+				return res.send(500, "Error renaming image file.");
+			} else {
+				console.log('success writing file ' + newPath);
+			}
+		});
+	}
+	
+	for(var i = 0, l = keys.length; i < l ; i ++) {
+		var current = keys[i],
+			extension = getExtension(files[current].headers['content-type']),
+			imgName = current.substr(5, current.length) + extension,
+			newPath = application_root + "/uploads/" + imgName;
+
+			readAsync(files[current].path, newPath, renameAsync);
+	}
+
+	//res.send('Done reading files');
+	return res.send(200, { success: 'Done uploading files.'});
+	
+});
+
+app.get('/api/products/images/:id/:kind', function(req, res) {
+	var productId = req.params.id,
+		kind = req.params.kind,
+		img = fs.readFileSync(application_root + "/uploads/" + productId + "_" + kind + ".jpg");
+
+		res.writeHead(200, {'Content-Type': 'image/jpg' });
+		res.end(img, 'binary');
 
 });
 

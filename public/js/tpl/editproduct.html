@@ -8,7 +8,7 @@
  		<li class=""><a href="javascript:;">Variants</a></li>
  	</ul>
  	
- 	<form action="/#products/new" name="<%= action %>ProductForm" class="form-horizontal" role="form">
+ 	<form name="productForm" class="form-horizontal" method="post" role="form">
  		<div class="hr_20"></div>
  		<div class="form-group">
  			<label for="inputName" class="col-sm-2 control-label">Name</label>
@@ -44,6 +44,7 @@
  			</div>
  			<input type="text" name="hiddenCategories" id="hiddenCategories" class="hidden" value="">
  		</div>
+ 		</form>
  		<div class="form-group">
  			<div class="col-sm-1"></div>
  			<div class="col-sm-10">
@@ -54,21 +55,24 @@
 		 					<a class="delimg-btn" href="javascript:;">Remove</a>
 						</div>
 	 				</div>
-	 				<div class="panel-body">
-	 					<div class="imagetype-list">
-		 					<ul></ul>		 		
+	 				<form name="imageListForm" action="/api/products/uploadImages" method="post" enctype="multipart/form-data">
+		 				<div class="panel-body">
+		 					<div class="imagetype-list">
+			 					<ul></ul>		 		
+			 				</div>
 		 				</div>
-	 				</div>
+	 				</form>
 	 			</div>
  			</div>
  		</div>
  		<div class="form-group">
  			<div class="col-sm-1"></div>
  			<div class="col-sm-8">
- 				<button type="submit" class="btn btn-primary"><%= (action == 'Edit') ? 'Update' : 'Save' %> changes</button>
+ 				<button type="button" id="saveChanges" class="btn btn-primary"><%= (action == 'Edit') ? 'Update' : 'Save' %> changes</button>
+ 				<input type="hidden" name="id">
  			</div>
  		</div>
- 	</form>
+ 	
 
 
   </div>

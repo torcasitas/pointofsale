@@ -25,11 +25,11 @@ define([
 		// }
 
 		sync: function(method, model, options) {
+			var uri = "http://localhost:4242/api/products/",
+				self = this;
 			if (method === 'update') {
-				var uri = "http://localhost:4242/api/products/",
-				 urlEnd = this.id ? uri + this.id : uri,
-				 self 	= this;
-
+				 var urlEnd = this.id ? uri + this.id : uri;
+				 
 				return $.ajax({
 					dataType: 'json',
 					type: 'PUT',
@@ -37,17 +37,37 @@ define([
 					data: model.attributes,
 					success: function(data) {
 						console.log('updated product successfully.');
-						self.trigger('change');
+						options.sucess();
 					},
 					error: function(err) {
 						console.log('error updating');
 						console.dir(err);
+						options.error();
 					}
 				});
 			
-			} else {
+			} else if (method === 'create') {
+				//return Backbone.sync.apply(this, arguments);
+				var urlEnd  = uri;
+				
+				return $.ajax({
+					dataType: 'json',
+					type: 'POST',
+					url: urlEnd,
+					data: model.attributes,
+					success: function(data) {
+						console.log('added product sucessfully.');
+						options.success({id: data._id });
 
-				return Backbone.sync.apply(this, arguments);
+					},
+					error: function(err) {
+						console.log('error adding product.');
+						console.dir(err);
+						options.error();
+					}
+				});
+
+
 			}
 		}
 
