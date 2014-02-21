@@ -18,7 +18,7 @@ define([
 		},
 
 		initialize: function() {			
-			this.kindImages = ['Main', 'Icon'];  		// Predefined kinds of images
+			this.imageTypes = ['Main', 'Icon'];  		// Predefined kinds of images
 
 			this.model.on("change", this.render, this);
 			this.model.on("destroy", this.remove, this);
@@ -27,7 +27,7 @@ define([
 		},
 
 		render: function(options) {
-			this.model.attributes["kindImages"] = this.kindImages;
+			this.model.attributes["imageTypes"] = this.imageTypes;
 
 			this.$el.html(this.template(this.model.toJSON()));
 			this.$inputImageType = this.$el.children('select[name="inputImageType[]"]');

@@ -84,6 +84,14 @@ define([
 				this.categoryListView.collection.create(category);
 			}, this);
 
+			if (typeof data._id != 'undefined') {
+				_.map(data.images, function(item ) {
+					item["prdId"] = data._id;
+					return item;
+				});
+
+			}
+
 			_.each(data.images, function(image) {
 				this.imagetypeListView.collection.create(image);
 			}, this);
@@ -100,27 +108,25 @@ define([
 			}	
 			
 			this.model = product;
-
 			this.render();
 		},
 
-		updateModel: function() {
-			console.log('Model updated...');
+		updateModel: function() {			
 			this.eventAgg.trigger('showProductListing', {update: true});
 			this.clearInputFields();
 
 		},
 
 		addProduct: function(ev) {			
-
+			var self = this;
 			var newData = ev.toJSON();
 			// Product has been added to Store, time to upload pics 
 
 			this.uploadImages({
-				success: function() {
-					// this.eventAgg.trigger('showProductListing', {update: true});
-					// this.clearInputFields();
-					console.log('Number is GREATER than 50');
+				success: function(e) {
+					//self.eventAgg.trigger('showProductListing', {update: true});
+					//self.clearInputFields();
+					self.updateModel();
 				}, 
 				error: function() {
 					//console.log('Error uploading images to the server');
@@ -141,7 +147,11 @@ define([
 				$filesEl 	= $('form[name="imageListForm"] input[type="file"]'),
 				fileData 	= new FormData();
 
-			if(!$filesEl.length) return;
+			if(!$filesEl.length) {
+				console.log('No images added.');
+				options.success();
+				return;
+			}
 
 			var appendFileData = function(file, index) {
 				var kind = images[index] && images[index].kind;
@@ -160,6 +170,7 @@ define([
 				contentType: false,
 				success: function(data, status, jqXHR) {
 					console.log('Success uploading files');
+					options.success();
 				},
 				error: function(jqXHR, status, error) {
 					console.log('error uploading files');
@@ -181,25 +192,8 @@ define([
 		addImage: function(ev) {
 			ev.preventDefault();
 
-			// var files = ev.target.files,
-			// 	imagetypeCollection = this.imagetypeListView.collection;
-
-			// imagetypeCollection.reset();
-
-			// for(var i =0, f; f = files[i]; i++) {
-			// 	var imageItem = {
-			// 			"name" : f.name,
-			// 			"type" : f.type,
-			// 			"kind" : "",
-			// 			"file" : f						
-			// 		};
-				 	
-			//  	if( !_.findWhere( imagetypeCollection.toJSON(), imageItem )) {
-			// 		imagetypeCollection.create(imageItem);
-			// 	}
-			// }
-
 			var item = {
+					"id" : '',
 					"kind" : '',
 					"name" : 'No image.',
 					"type" : ''
