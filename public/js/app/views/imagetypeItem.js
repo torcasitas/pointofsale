@@ -58,6 +58,7 @@ define([
 					
 				this.model.set({ "file" : file }, {silent: true});
 				this.model.set({ "name" : file.name }, {silent: true});
+				this.model.set({ "changed" : true }, {silent: true});			
 
 				fileReader.onload = (function(theFile) {
 					return function(e) {

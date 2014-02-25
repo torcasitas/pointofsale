@@ -37,7 +37,7 @@ define([
 					data: model.attributes,
 					success: function(data) {
 						console.log('updated product successfully.');
-						options.sucess();
+						options.success();
 					},
 					error: function(err) {
 						console.log('error updating');

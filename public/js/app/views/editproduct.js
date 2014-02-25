@@ -40,6 +40,8 @@ define([
 			this.categoryCollection = null;
 			this.imagetypeCollection = null;
 
+			this.modifiedImages = null;
+
 			this.listenTo(productCollection, 'add', 	this.addProduct);
 		
 			// this.listenTo(categoryCollection, 'remove', this.removeCategory);
@@ -111,22 +113,44 @@ define([
 			this.render();
 		},
 
-		updateModel: function() {			
-			this.eventAgg.trigger('showProductListing', {update: true});
-			this.clearInputFields();
+		updateModel: function(model) {			
 
-		},
-
-		addProduct: function(ev) {			
+			// this.eventAgg.trigger('showProductListing', {update: true});
+			// this.clearInputFields();
 			var self = this;
-			var newData = ev.toJSON();
+			var newData = model.toJSON();
 			// Product has been added to Store, time to upload pics 
 
 			this.uploadImages({
 				success: function(e) {
 					//self.eventAgg.trigger('showProductListing', {update: true});
 					//self.clearInputFields();
-					self.updateModel();
+					self.showProductListing(null, true);
+				}, 
+				error: function() {
+					//console.log('Error uploading images to the server');
+					console.log('Number is not greater than 50');
+				}, 
+				rData : { 
+					id : newData._id,
+					images : newData.images,
+					replaceImages : this.modifiedImages			  // Add 		
+				}
+			});
+
+
+		},
+
+		addProduct: function(model) {			
+			var self = this;
+			var newData = model.toJSON();
+			// Product has been added to Store, time to upload pics 
+
+			this.uploadImages({
+				success: function(e) {
+					//self.eventAgg.trigger('showProductListing', {update: true});
+					//self.clearInputFields();
+					self.showProductListing(null, true);
 				}, 
 				error: function() {
 					//console.log('Error uploading images to the server');
@@ -141,9 +165,10 @@ define([
 		},
 
 		uploadImages: function(options) {
-			var self 		= this,
-				id 			= options.rData.id,
-				images 		= options.rData.images,
+			var self 			= this,
+				id 				= options.rData.id,
+				images 			= options.rData.images,
+				replaceImages	= options.rData.replaceImages,	
 				$filesEl 	= $('form[name="imageListForm"] input[type="file"]'),
 				fileData 	= new FormData();
 
@@ -153,12 +178,13 @@ define([
 				return;
 			}
 
-			var appendFileData = function(file, index) {
-				var kind = images[index] && images[index].kind;
-				fileData.append('file_' + id + '_' + kind.toLowerCase(), file.files[0]);
+			var appendFileData = function(item, index) {
+				var kind = (typeof item.kind != 'undefined') ? item.kind : (images[index] && images[index].kind);
+				fileData.append('file_' + id + '_' + kind.toLowerCase(), (!item.files) ? item.file : file.files[0]);
 			};
 
-			_.each($filesEl, appendFileData);
+			var files = (replaceImages.length > 0 ) ? replaceImages : $filesEl;
+			_.each(files, appendFileData);
 
 			$.ajax({
 				url: self.uploadImagesEndpoint,
@@ -225,7 +251,13 @@ define([
 			var catCollection = this.categoryListView.collection,
 				imgTypeCollection = this.imagetypeListView.collection;
 
+				this.modifiedImages = [];
+
 				_.each(imgTypeCollection.models, function(imgItem) {
+					if (imgItem.get("changed")) {
+						this.modifiedImages.push(imgItem.toJSON());
+					}
+
 					imgItem.unset("type", {silent:true});
 					imgItem.unset("file", {silent:true});
 					imgItem.unset("kindImages", {silent:true});
@@ -269,9 +301,13 @@ define([
 
 		},
 
-		showProductListing: function(ev) {
-			ev.preventDefault();
-			this.eventAgg.trigger('showProductListing', {update: false});
+		showProductListing: function(ev, willUpdate) {
+			if (ev != null) ev.preventDefault();
+
+			var updateListing = (typeof willUpdate != 'undefined') ? willUpdate : false;
+			
+			this.eventAgg.trigger('showProductListing', {update: updateListing});
+			this.clearInputFields();
 		}
 
 	});
