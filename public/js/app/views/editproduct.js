@@ -168,11 +168,11 @@ define([
 			var self 			= this,
 				id 				= options.rData.id,
 				images 			= options.rData.images,
-				replaceImages	= options.rData.replaceImages,	
+				replaceImages	= options.rData.replaceImages || [],	
 				$filesEl 	= $('form[name="imageListForm"] input[type="file"]'),
 				fileData 	= new FormData();
 
-			if(!$filesEl.length) {
+			if(!$filesEl.length ) {
 				console.log('No images added.');
 				options.success();
 				return;
@@ -180,10 +180,10 @@ define([
 
 			var appendFileData = function(item, index) {
 				var kind = (typeof item.kind != 'undefined') ? item.kind : (images[index] && images[index].kind);
-				fileData.append('file_' + id + '_' + kind.toLowerCase(), (!item.files) ? item.file : file.files[0]);
+				fileData.append('file_' + id + '_' + kind.toLowerCase(), (!item.files) ? item.file : item.files[0]);
 			};
 
-			var files = (replaceImages.length > 0 ) ? replaceImages : $filesEl;
+			var files = (!replaceImages.length) ? $filesEl : replaceImages;
 			_.each(files, appendFileData);
 
 			$.ajax({
@@ -221,8 +221,7 @@ define([
 			var item = {
 					"id" : '',
 					"kind" : '',
-					"name" : 'No image.',
-					"type" : ''
+					"name" : 'No image.'
 				},
 				imagetypeCollection = this.imagetypeListView.collection;
 

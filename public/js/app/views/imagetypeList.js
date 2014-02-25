@@ -11,12 +11,12 @@ define([
 		initialize: function(options) {
 			this.collection.on("add",  this.render, this);
 			this.collection.on("remove", this.removeItem, this);
+			//this.collection.on("change", this.changeKindImage, this );
+
 		},
 
 		render: function(imageItem) {
 			this.$el.append(new ImageTypeItemView({model: imageItem}).render().el);
-
-			$(':file').filestyle({input: false, buttonText: "Select file", classButton: "btn btn-primary"});
 
 		},
 

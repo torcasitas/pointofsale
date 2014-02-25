@@ -14,6 +14,7 @@ define([
 		events : {
 			"click .remove"								: "removeItem",
 			"change select[name='inputImageType[]']" 	: "changeCategory",
+			"focus select[name='inputImageType[]']" 	: "cacheOldCategory",
 			"change input[name='inputImageFile[]']" 	: "changeImage",
 		},
 
@@ -24,24 +25,40 @@ define([
 			this.model.on("destroy", this.remove, this);
 
 			this.$inputImageType = null;
+
+			this.oldImageType = '';
 		},
 
 		render: function(options) {
 			this.model.attributes["imageTypes"] = this.imageTypes;
 
 			this.$el.html(this.template(this.model.toJSON()));
-			this.$inputImageType = this.$el.children('select[name="inputImageType[]"]');
 
+			this.$el.find(':file').filestyle({input: false, buttonText: "Select file", classButton: "btn btn-primary"});
+			this.$inputImageType = this.$el.children('select[name="inputImageType[]"]');
 
 			return this;
 		},
 
+		cacheOldCategory: function(ev) {
+			this.oldImageType = ev.target.selectedIndex;
+		},
+
 		changeCategory: function(ev) {
 			var el = ev.target,
-				kindValue = el.options[el.selectedIndex].value;
+				kindValue = el.options[el.selectedIndex].value,
+				collection = this.model.collection;
 
-			if (kindValue != "" ) {
-				this.model.set({"kind" : kindValue }, {silent : true});
+				ev.preventDefault();
+
+			if (kindValue != "") {
+				var kindIsSet = (collection.findKind(kindValue).length > 0);
+
+				if(!kindIsSet){
+					this.model.set({"kind" : kindValue });
+				} else {
+					ev.target.selectedIndex = this.oldImageType;
+				}
 			}
 		},
 

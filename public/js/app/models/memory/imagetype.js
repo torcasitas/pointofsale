@@ -8,8 +8,8 @@ define([
 
 		defaults: {
 			kind: '',
-			name: '',
-			type: 'Icon'
+			name: ''
+			//type: 'Icon'
 		},
 
 		sync: function(method, model, options) {
@@ -17,11 +17,19 @@ define([
 				return Backbone.sync.apply(this, arguments);
 			}
 		}
+		
 
 	}),
 
 	ImageTypeCollection = Backbone.Collection.extend({
-		model: ImageTypeItem
+		model: ImageTypeItem,
+
+		findKind : function(value) {
+			// return this.filter(function (imageItem) {
+			// 	return imageItem.get('kind')
+			// });
+			return this.where({kind: value});
+		}
 	});
 
 	return {

@@ -22,7 +22,7 @@ define([
 		},
 
 		render: function() {
-			console.log('Model has changed');
+			console.log('Category model has changed');
 			this.$el.html(this.template(this.model.toJSON()));
 
 			return this;
