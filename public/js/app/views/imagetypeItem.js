@@ -26,7 +26,6 @@ define([
 
 			this.$inputImageType = null;
 
-			this.oldImageType = '';
 		},
 
 		render: function(options) {
@@ -40,26 +39,22 @@ define([
 			return this;
 		},
 
-		cacheOldCategory: function(ev) {
-			this.oldImageType = ev.target.selectedIndex;
-		},
-
 		changeCategory: function(ev) {
 			var el = ev.target,
 				kindValue = el.options[el.selectedIndex].value,
 				collection = this.model.collection;
 
-				ev.preventDefault();
+			ev.preventDefault();
 
-			if (kindValue != "") {
-				var kindIsSet = (collection.findKind(kindValue).length > 0);
+			var kindIsSet = (collection.findKind(kindValue).length > 0);
 
-				if(!kindIsSet){
-					this.model.set({"kind" : kindValue });
-				} else {
-					ev.target.selectedIndex = this.oldImageType;
-				}
+			if(!kindIsSet){
+				this.model.set({"kind" : kindValue });
+			} else {
+				this.model.set({"kind" : "" });
+				ev.target.selectedIndex = 0; 
 			}
+		
 		},
 
 		changeImage: function(ev) {

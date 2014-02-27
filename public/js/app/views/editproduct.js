@@ -40,6 +40,8 @@ define([
 			this.categoryCollection = null;
 			this.imagetypeCollection = null;
 
+			this.formErrors = {};
+
 			this.modifiedImages = null;
 
 			this.listenTo(productCollection, 'add', 	this.addProduct);
@@ -284,18 +286,40 @@ define([
 			return false;
 		},
 
+		displayErrors: function() {
+			
+			// Remove error class and clear any error messages
+			$('.form-group').removeClass('has-error');
+			$('.msgs').text('');
+
+			_.each(this.formErrors, function(errMsg, key){
+				var field = $('.' + key + '-field'),
+					msgs = field.find('.msgs');
+				
+				field.addClass('has-error');
+				msgs.text(errMsg);
+			});
+		},
+
 		saveProduct: function(ev) {
 			ev.preventDefault();
-			var action = this.model.attributes['action'];
+			var action = this.model.attributes['action'],
+				newAttributes = this.newAttributes(),
+				error = '';
 			
 			console.log("Submitting form...");
 
+			this.formErrors = this.model.validate(newAttributes);
+
+			if ( !_.isEmpty(this.formErrors) ) {
+				this.displayErrors();
+				return;
+			}
+
 			if (action == 'New') {
-				productCollection.create(this.newAttributes(), { wait: true } );
-			} else if (action == 'Edit') {
-				var updatedModel = this.newAttributes();
-					//this.model.set(this.newAttributes());	
-					this.model.save(updatedModel, {wait: true});
+				productCollection.create(newAttributes, { wait: true }, {validation : true} );
+			} else if (action == 'Edit') {				
+				this.model.save(newAttributes, {wait: true}, {validation: true});
 			}
 
 		},
