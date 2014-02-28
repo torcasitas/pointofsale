@@ -49,9 +49,9 @@ define([
 			var kindIsSet = (collection.findKind(kindValue).length > 0);
 
 			if(!kindIsSet){
-				this.model.set({"kind" : kindValue });
+				this.model.set({"kind" : kindValue }, {silent: true});
 			} else {
-				this.model.set({"kind" : "" });
+				this.model.set({"kind" : "" }, {silent: true});
 				ev.target.selectedIndex = 0; 
 			}
 		
