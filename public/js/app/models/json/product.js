@@ -32,14 +32,14 @@ define([
 			if( attrs.images.length > 0 ) {
 				var imgs = attrs.images;
 
-				errorMsg["imgKind"] = [];
+				errorMsg["imageList"] = [];
 
 				for(var i = 0, l = attrs.images.length ; i < l ; i ++) {
 
 					var img = attrs.images[i];
 
 					if(img.kind === undefined || img.kind === "" ) {
-						errorMsg["imgKind"][i] = "Set a category for this image";
+						errorMsg["imageList"][i] = "Set a category for this image";
 					}
 				}
 				

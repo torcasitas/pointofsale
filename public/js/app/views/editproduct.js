@@ -296,8 +296,23 @@ define([
 				var field = $('.' + key + '-field'),
 					msgs = field.find('.msgs');
 				
-				field.addClass('has-error');
-				msgs.text(errMsg);
+				if(_.isArray(errMsg)) {
+					var fields = field.find('.imagetype-list li > .form-group'),
+						listMsg = '';
+
+					_.each(errMsg, function(m, key) {
+						$(fields[key]).addClass('has-error');
+						listMsg = m;
+					});
+
+					field.find('.panel-footer').addClass('has-error');
+					field.find('.panel-footer .msgs').text(listMsg);
+
+
+				} else {
+					field.addClass('has-error');
+					msgs.text(errMsg);
+				}
 			});
 		},
 
