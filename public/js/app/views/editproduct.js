@@ -326,15 +326,18 @@ define([
 
 			this.formErrors = this.model.validate(newAttributes);
 
+			// Validating the model first and displaying any errors right away. 
+			// An invalid event could also be triggered when saving/creating model if
+			// a validate property is set to true.
 			if ( !_.isEmpty(this.formErrors) ) {
 				this.displayErrors();
 				return;
 			}
 
 			if (action == 'New') {
-				productCollection.create(newAttributes, { wait: true }, {validation : true} );
+				productCollection.create(newAttributes, { wait: true, validate: false } );
 			} else if (action == 'Edit') {				
-				this.model.save(newAttributes, {wait: true}, {validation: true});
+				this.model.save(newAttributes, {wait: true, validate: false });
 			}
 
 		},

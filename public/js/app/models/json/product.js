@@ -45,7 +45,13 @@ define([
 				
 			}
 
-			return errorMsg;
+			if( !errorMsg.imageList || errorMsg.imageList.length == 0 ) {
+				console.log('iamge empty')
+				delete errorMsg["imageList"];
+			}
+
+			// Return null if no error was found.
+			return (_.isEmpty(errorMsg) ? null : errorMsg);
 		},
 		
 
