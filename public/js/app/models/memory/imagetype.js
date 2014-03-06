@@ -12,12 +12,21 @@ define([
 			//type: 'Icon'
 		},
 
+		validate: function(attrs, options) {
+
+			if(attrs.kind === undefined || attrs.kind === '') {
+				return "Select a category for this image";
+			}
+
+		},
+
 		sync: function(method, model, options) {
 			if (method == 'read') {
 				return Backbone.sync.apply(this, arguments);
 			}
 		}
 		
+
 
 	}),
 

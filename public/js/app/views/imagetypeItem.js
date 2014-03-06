@@ -18,11 +18,16 @@ define([
 			"change input[name='inputImageFile[]']" 	: "changeImage",
 		},
 
-		initialize: function() {			
+		initialize: function(options) {
+			this.eventAgg = options.eventAgg;
+
+
 			this.imageTypes = ['Main', 'Icon'];  		// Predefined kinds of images
 
 			this.model.on("change", this.render, this);
 			this.model.on("destroy", this.remove, this);
+			
+			this.$errorMsgsEl = $('form[name="imageListForm"]').siblings('.panel-footer').children('.msgs');
 
 			this.$inputImageType = null;
 
@@ -89,8 +94,23 @@ define([
 		},
 
 		removeItem: function() {
-			this.model.destroy();
+			var modelAttrs = this.model.toJSON(),
+				errMsg = this.model.validate(modelAttrs);
+
+			if(!errMsg) {
+				this.eventAgg.trigger('storeImageforDeletion', modelAttrs);
+				this.model.destroy();	
+			} else {
+				this.showError(errMsg);
+			}
+		},
+
+		showError: function(errorMsg) {
+			this.$el.children('.form-group').removeClass('has-error').addClass('has-error');
+
+			this.$errorMsgsEl.empty().text(errorMsg);
 		}
+
 	});
 
 	return imagetypeItemView;

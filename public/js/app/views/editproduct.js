@@ -31,7 +31,9 @@ define([
 
 		initialize: function(options) {
 			_.bindAll(this, 'editProduct');
+			_.bindAll(this, 'storeImageforDeletion');
 			options.eventAgg.bind('editProduct', this.editProduct);
+			options.eventAgg.bind('storeImageforDeletion', this.storeImageforDeletion);
 
 			this.eventAgg = options.eventAgg;
 
@@ -43,6 +45,7 @@ define([
 			this.formErrors = {};
 
 			this.modifiedImages = null;
+			this.markDeleteImages = [];
 
 			this.listenTo(productCollection, 'add', 	this.addProduct);
 		
@@ -80,8 +83,11 @@ define([
 		
 			this.imagetypeListView = new ImageTypeListView({ 
 					collection: new ImageTypeModel.ImageTypeCollection(),
-					el: this.$imageTypesEl
+					el: this.$imageTypesEl,
+					eventAgg: this.eventAgg
 			});
+
+			this.markDeleteImages = [];
 
 			// Populate the collections if the current model contains any data. 
 			_.each(data.categories, function(category) {
@@ -115,7 +121,9 @@ define([
 			this.render();
 		},
 
-		updateModel: function(model) {			
+		updateModel: function(model) {		
+
+			console.log('Product model has been changed !');	
 
 			// this.eventAgg.trigger('showProductListing', {update: true});
 			// this.clearInputFields();
@@ -180,6 +188,8 @@ define([
 				return;
 			}
 
+			//fileData.append('removeFiles', );
+
 			var appendFileData = function(item, index) {
 				var kind = (typeof item.kind != 'undefined') ? item.kind : (images[index] && images[index].kind);
 				fileData.append('file_' + id + '_' + kind.toLowerCase(), (!item.files) ? item.file : item.files[0]);
@@ -187,6 +197,8 @@ define([
 
 			var files = (!replaceImages.length) ? $filesEl : replaceImages;
 			_.each(files, appendFileData);
+
+
 
 			$.ajax({
 				url: self.uploadImagesEndpoint,
@@ -212,9 +224,9 @@ define([
 				item = { "name" : category },
 				catCollection = this.categoryListView.collection;
 
-				if( !_.findWhere( catCollection.toJSON(), item) ) {
-					catCollection.create(item);
-				}
+			if( !_.findWhere( catCollection.toJSON(), item) ) {
+				catCollection.create(item);
+			}
 		},
 
 		addImage: function(ev) {
@@ -223,7 +235,7 @@ define([
 			var item = {
 					"id" : '',
 					"kind" : '',
-					"name" : 'No image.'
+					"name" : ''
 				},
 				imagetypeCollection = this.imagetypeListView.collection;
 
@@ -235,6 +247,18 @@ define([
 
 		},
 
+		// Keeps track of deleted images to be passed to the API in order to remove such files from the server.
+		storeImageforDeletion: function(imageItem) {
+			if (!imageItem.prdId) return;   // If Product Id is not present means we're creating a new product
+
+			var file = imageItem.prdId + "_" + imageItem.kind.toLowerCase();
+
+			if ( !(this.markDeleteImages.indexOf(file) > 0) ) {
+				this.markDeleteImages.push(file);
+			}
+
+		},
+
 		removeImage: function(ev){
 			ev.preventDefault();
 			var imagetypeView = this.imagetypeListView,
@@ -243,6 +267,7 @@ define([
 
 			if(lastItem > -1) {
 				var lastImageItem = imagetypeCollection.get(imagetypeCollection.models[lastItem]);
+					this.storeImageforDeletion(lastImageItem.toJSON());
 					imagetypeCollection.remove(lastImageItem);
 			}
 
@@ -292,7 +317,7 @@ define([
 			$('.form-group').removeClass('has-error');
 			$('.msgs').text('');
 
-			_.each(this.formErrors, function(errMsg, key){
+			_.each(this.formErrors, function(errMsg, key) {
 				var field = $('.' + key + '-field'),
 					msgs = field.find('.msgs');
 				
@@ -308,8 +333,8 @@ define([
 					field.find('.panel-footer').addClass('has-error');
 					field.find('.panel-footer .msgs').text(listMsg);
 
-
 				} else {
+
 					field.addClass('has-error');
 					msgs.text(errMsg);
 				}

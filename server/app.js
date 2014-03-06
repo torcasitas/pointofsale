@@ -185,7 +185,7 @@ app.post('/api/products/uploadImages', function(req, res) {
 
 		};
 	
-		var cache = {};
+	var cache = {};
 
 	var readAsync = function(file, newPath, cb) {
 		
@@ -207,7 +207,7 @@ app.post('/api/products/uploadImages', function(req, res) {
 
 	var renameAsync = function(oldPath, newPath) {
 
-		fs.rename(oldPath, newPath, function(err){
+		fs.rename(oldPath, newPath, function(err) {
 			if (err) {
 				console.log('error writing file');
 				return res.send(500, "Error renaming image file.");
@@ -215,7 +215,7 @@ app.post('/api/products/uploadImages', function(req, res) {
 				console.log('success writing file ' + newPath);
 			}
 		});
-	}
+	};
 	
 	for(var i = 0, l = keys.length; i < l ; i ++) {
 		var current = keys[i],
@@ -223,10 +223,12 @@ app.post('/api/products/uploadImages', function(req, res) {
 			imgName = current.substr(5, current.length) + extension,
 			newPath = application_root + "/uploads/" + imgName;
 
+			console.log("File key");
+			console.dir(keys[i]);
+
 			readAsync(files[current].path, newPath, renameAsync);
 	}
 
-	//res.send('Done reading files');
 	return res.send(200, { success: 'Done uploading files.'});
 	
 });

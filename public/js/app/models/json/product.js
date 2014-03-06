@@ -39,14 +39,13 @@ define([
 					var img = attrs.images[i];
 
 					if(img.kind === undefined || img.kind === "" ) {
-						errorMsg["imageList"][i] = "Set a category for this image";
+						errorMsg["imageList"][i] = "Set a category for all images";
 					}
 				}
 				
 			}
 
-			if( !errorMsg.imageList || errorMsg.imageList.length == 0 ) {
-				console.log('iamge empty')
+			if( !errorMsg.imageList || errorMsg.imageList.length == 0 ) {				
 				delete errorMsg["imageList"];
 			}
 

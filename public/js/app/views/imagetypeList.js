@@ -13,11 +13,12 @@ define([
 			this.collection.on("remove", this.removeItem, this);
 			//this.collection.on("change", this.changeKindImage, this );
 
+			this.eventAgg = options.eventAgg;
+
 		},
 
 		render: function(imageItem) {
-			this.$el.append(new ImageTypeItemView({model: imageItem}).render().el);
-
+			this.$el.append(new ImageTypeItemView({model: imageItem, eventAgg: this.eventAgg }).render().el);
 		},
 
 		removeItem: function(model) {
