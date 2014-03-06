@@ -26,8 +26,6 @@ define([
 			}
 		}
 		
-
-
 	}),
 
 	ImageTypeCollection = Backbone.Collection.extend({

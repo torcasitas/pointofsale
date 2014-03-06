@@ -188,7 +188,7 @@ define([
 				return;
 			}
 
-			//fileData.append('removeFiles', );
+			fileData.append('removeFiles', this.markDeleteImages.join(','));
 
 			var appendFileData = function(item, index) {
 				var kind = (typeof item.kind != 'undefined') ? item.kind : (images[index] && images[index].kind);
@@ -197,8 +197,6 @@ define([
 
 			var files = (!replaceImages.length) ? $filesEl : replaceImages;
 			_.each(files, appendFileData);
-
-
 
 			$.ajax({
 				url: self.uploadImagesEndpoint,

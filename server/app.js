@@ -11,8 +11,11 @@ var express = require('express'),
 var app = express(); 
 
 
-// Database 
+var configVars = {
+	uploadImgDir : '/uploads/'
+}
 
+// Database 
 mongoose.connect('mongodb://localhost/vicon');
 
 // Config
@@ -169,11 +172,13 @@ app.post('/api/products/bulk', function(req, res) {
 
 // Upload images
 app.post('/api/products/uploadImages', function(req, res) {
+	var uploadDir = configVars.uploadImgDir;
 
 	if (!req.files) return;
 	
 	var files = req.files,
 		keys = Object.keys(files),
+		removeFiles = (req.body.removeFiles.length > 0) ? req.body.removeFiles.split(',') : [],
 		getExtension = function(type) {
 
 			switch(type) {
@@ -185,12 +190,9 @@ app.post('/api/products/uploadImages', function(req, res) {
 
 		};
 	
-	var cache = {};
+		var cache = {};
 
 	var readAsync = function(file, newPath, cb) {
-		
-		console.log('file read : ');
-		console.log(file);
 
 		fs.readFile(file, function(err, data) {
 			
@@ -207,7 +209,7 @@ app.post('/api/products/uploadImages', function(req, res) {
 
 	var renameAsync = function(oldPath, newPath) {
 
-		fs.rename(oldPath, newPath, function(err) {
+		fs.rename(oldPath, newPath, function(err){
 			if (err) {
 				console.log('error writing file');
 				return res.send(500, "Error renaming image file.");
@@ -216,19 +218,38 @@ app.post('/api/products/uploadImages', function(req, res) {
 			}
 		});
 	};
+
+	var deleteImages = function(imgFile) {
+		
+		var rmFile = application_root + uploadDir + imgFile,
+			extensions = ['.jpg', '.png', '.gif', '.jpeg'];
+
+			//console.log('file to be deleted  : ' + rmFile);
+
+		for(var x = 0, l = extensions.length; x < l; x++) {
+			var tobeDeleted = rmFile + extensions[x];
+
+			if (fs.existsSync( tobeDeleted ) ) {
+				fs.unlinkSync(tobeDeleted);
+			}
+		}
+		
+	};
 	
 	for(var i = 0, l = keys.length; i < l ; i ++) {
 		var current = keys[i],
 			extension = getExtension(files[current].headers['content-type']),
 			imgName = current.substr(5, current.length) + extension,
-			newPath = application_root + "/uploads/" + imgName;
-
-			console.log("File key");
-			console.dir(keys[i]);
+			newPath = application_root + uploadDir + imgName;
 
 			readAsync(files[current].path, newPath, renameAsync);
 	}
 
+	for(var i = 0, l = removeFiles.length; i < l; i++) {
+	 	deleteImages(removeFiles[i]);
+	}
+	
+	//res.send('Done reading files');
 	return res.send(200, { success: 'Done uploading files.'});
 	
 });
@@ -236,10 +257,23 @@ app.post('/api/products/uploadImages', function(req, res) {
 app.get('/api/products/images/:id/:kind', function(req, res) {
 	var productId = req.params.id,
 		kind = req.params.kind,
-		img = fs.readFileSync(application_root + "/uploads/" + productId + "_" + kind + ".jpg");
+		imageFile = application_root + configVars.uploadImgDir + productId + "_" + kind,
+		contentTypes = {
+			jpg : 'image/jpeg',
+			png : 'image/png',
+			gif : 'image/gif'
+		};
 
-		res.writeHead(200, {'Content-Type': 'image/jpg' });
-		res.end(img, 'binary');
+		for (var type in contentTypes) {
+			var img = imageFile + '.' + type;
+			if ( fs.existsSync( img ) ){
+				imgBin = fs.readFileSync( img );
+
+				res.writeHead(200, {'Content-Type': contentTypes[type] });
+				res.end(imgBin, 'binary');
+				return;
+			}
+		}	
 
 });
 
