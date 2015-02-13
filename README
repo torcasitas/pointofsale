@@ -1,4 +1,11 @@
+
+Simple Point of Sale App
+Backbone.js / Node.js 
+
 # This is a Point of Sale application using a rest API using Node.js/Express and MongoDB as storage.
-# The front end uses a Backbone.js implementation sitting on top of Require.js to load the necessary files for each module. 
+# The front end uses a Backbone.js implementation. 
+# 
+# Assuming you have node/npm installed in your machine, you will need to start the server under the server folder and 
+# run `nodemon app.js`
 
 
